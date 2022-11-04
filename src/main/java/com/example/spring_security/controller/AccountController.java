@@ -31,8 +31,8 @@ public class AccountController {
       return  accountService.addNewUser(appUser);
     }
 
-    @PostMapping("/users")
-    public AppRole saveUser(@RequestBody AppRole appRole){
+    @PostMapping("/roles")
+    public AppRole saveRole(@RequestBody AppRole appRole){
         return  accountService.addNewRole(appRole);
     }
 
