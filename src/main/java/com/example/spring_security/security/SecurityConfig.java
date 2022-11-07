@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
         //verification des autorisations
         http.authorizeRequests().antMatchers(HttpMethod.POST,"/users/**").hasAnyAuthority("ADMIN");
-        http.authorizeRequests().antMatchers("/refresh-token");
+        http.authorizeRequests().antMatchers("/refresh-token").permitAll();
         http.authorizeRequests().antMatchers("/login").permitAll()
                 .anyRequest().authenticated();
         // Ajout du filtre ou middleware(laravel) pour l'authentification
