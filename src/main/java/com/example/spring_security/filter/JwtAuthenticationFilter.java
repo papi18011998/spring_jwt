@@ -2,6 +2,7 @@ package com.example.spring_security.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.example.spring_security.utils.JWTUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,10 +49,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         User user = (User) authResult.getPrincipal();
 
         //Generation du token
-        Algorithm algorithm =Algorithm.HMAC256("youssfiSecret");
+        Algorithm algorithm =Algorithm.HMAC256(JWTUtils.SECRET);
          String jwtAccessToken = JWT.create()
                  .withSubject(user.getUsername())
-                 .withExpiresAt(new Date(System.currentTimeMillis()+5*60*1000))
+                 .withExpiresAt(new Date(System.currentTimeMillis()+JWTUtils.EXPIRE_ACCESS_TOKEN))
                  .withIssuedAt(new Date())
                  .withIssuer(request.getRequestURL().toString())
                  .withClaim("roles",user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
@@ -59,7 +60,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String jwtRefreshToken = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis()+15*60*1000))
+                .withExpiresAt(new Date(System.currentTimeMillis()+JWTUtils.EXPIRE_REFRESH_TOKEN))
                 .withIssuedAt(new Date())
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);
@@ -71,6 +72,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         new ObjectMapper().writeValue(response.getOutputStream(),idToken);
         response.setContentType("application/json");
         //renvoi du access token sur le header
-         response.setHeader("Authorization",jwtAccessToken);
+         response.setHeader(JWTUtils.AUTHORIZATION_HEADER,jwtAccessToken);
     }
 }
