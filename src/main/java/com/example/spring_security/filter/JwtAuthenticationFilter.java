@@ -68,10 +68,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Map<String,String> idToken = new HashMap<>();
         idToken.put("access-token",jwtAccessToken);
         idToken.put("refresh-token",jwtRefreshToken);
+        //renvoi du access token sur le header
+        response.setHeader(JWTUtils.AUTHORIZATION_HEADER,jwtAccessToken);
         //renvoie des donnees au format json
         new ObjectMapper().writeValue(response.getOutputStream(),idToken);
         response.setContentType("application/json");
-        //renvoi du access token sur le header
-         response.setHeader(JWTUtils.AUTHORIZATION_HEADER,jwtAccessToken);
     }
 }

@@ -22,7 +22,7 @@ import java.util.Collection;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-            if (request.getServletPath().equals("/refresh-token")){
+            if (request.getServletPath().equals("/refresh-token") || request.getServletPath().equals("/login")){
                 filterChain.doFilter(request,response);
             }else{
                 String authorizationToken = request.getHeader(JWTUtils.AUTHORIZATION_HEADER);
